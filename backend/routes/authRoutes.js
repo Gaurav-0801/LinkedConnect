@@ -49,7 +49,7 @@ passport.deserializeUser(async (id, done) => {
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Google OAuth routes
+
 app.get('/api/auth/google', 
   passport.authenticate('google', { scope: ['profile', 'email'] })
 );
