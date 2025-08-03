@@ -13,6 +13,7 @@ import { Navbar } from "@/components/navbar"
 import { useAuth } from "@/hooks/use-auth"
 import { Loader2, MessageSquare, Heart, Share, Send, TrendingUp } from "lucide-react"
 import LikeCommentShareButtons from "@/components/LikecommentshareButton";
+import { BACKEND_URL } from "@/lib/constants"
 
 
 interface Post {
@@ -44,7 +45,7 @@ export default function DashboardPage() {
   const fetchPosts = async () => {
     setIsLoading(true)
     try {
-      const response = await fetch("http://localhost:4000/api/feed", {
+      const response = await fetch(`${BACKEND_URL}/api/feed`, {
         credentials: "include",
       })
       if (response.ok) {
@@ -64,7 +65,7 @@ export default function DashboardPage() {
 
     setIsSubmitting(true)
     try {
-      const response = await fetch("http://localhost:4000/api/post", {
+      const response = await fetch(`${BACKEND_URL}/api/post`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
