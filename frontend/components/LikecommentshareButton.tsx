@@ -54,7 +54,7 @@ export default function LikeCommentShareButtons({
       if (!userId) return;
 
       await axios.post(
-        `http://localhost:4000/api/posts/${postId}/like`,
+       `${BACKEND_URL}/api/posts/${postId}/like`,
         { userId },
         { withCredentials: true }
       );

@@ -2,6 +2,7 @@
 
 
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
+import { BACKEND_URL } from "@/lib/constants";
 
 interface User {
   id: string
@@ -50,7 +51,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const loginWithGoogle = async () => {
     try {
       // Redirect to Google OAuth
-      window.location.href = "http://localhost:4000/api/auth/google"
+      window.location.href = `${BACKEND_URL}/api/auth/google`
     } catch (error) {
       console.error("Google login failed:", error)
       throw error
