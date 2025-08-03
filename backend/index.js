@@ -11,7 +11,7 @@ dotenv.config();
 const prisma = new PrismaClient();
 const app = express();
 
-app.use(cors({ origin: process.env.NEXTAUTH_URL, credentials: true }));
+app.use(cors());
 app.use(express.json());
 
 app.use(
