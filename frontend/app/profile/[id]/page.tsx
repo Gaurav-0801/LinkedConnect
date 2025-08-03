@@ -9,6 +9,7 @@ import { formatDistanceToNow } from "date-fns"
 import { Navbar } from "@/components/navbar"
 import { LoginPage } from "@/components/login-page"
 import { useAuth } from "@/hooks/use-auth"
+import { BACKEND_URL } from "@/lib/constants";
 import {
   Loader2,
   MessageSquare,
@@ -50,7 +51,7 @@ export default function ProfilePage() {
     setIsLoading(true)
     setError(null)
     try {
-      const response = await fetch(`http://localhost:4000/api/profile/${userId}`, {
+      const response = await fetch(`${BACKEND_URL}/api/profile/${userId}`,{
         credentials: "include",
       })
       if (response.ok) {

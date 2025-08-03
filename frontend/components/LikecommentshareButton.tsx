@@ -5,6 +5,8 @@ import axios from "axios";
 import { Heart, MessageSquare, Share } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSession } from "next-auth/react";
+import { BACKEND_URL } from "@/lib/constants";
+
 
 export default function LikeCommentShareButtons({
   postId,
@@ -30,7 +32,7 @@ export default function LikeCommentShareButtons({
   const fetchComments = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:4000/api/posts/${postId}/comments`,
+        `${BACKEND_URL}/api/posts/${postId}/comments`,
         { withCredentials: true }
       );
       setComments(res.data || []);
@@ -72,11 +74,13 @@ export default function LikeCommentShareButtons({
   const handleComment = async () => {
     try {
       if (!comment.trim() || !userId) return;
-      await axios.post(
-        `http://localhost:4000/api/posts/${postId}/comment`,
-        { content: comment, userId },
-        { withCredentials: true }
-      );
+      await axios.post(`${BACKEND_URL}/api/posts/${postId}/comment`, {
+  content: comment,
+  userId
+}, {
+  withCredentials: true
+});
+
       setComment("");
       setShowCommentBox(false);
       fetchComments();
