@@ -12,18 +12,23 @@ import Link from "next/link"
 import { Navbar } from "@/components/navbar"
 import { useAuth } from "@/hooks/use-auth"
 import { Loader2, MessageSquare, Heart, Share, Send, TrendingUp } from "lucide-react"
+import LikeCommentShareButtons from "@/components/LikecommentshareButton";
+
 
 interface Post {
-  id: string
-  content: string
-  createdAt: string
+  id: string;
+  content: string;
+  createdAt: string;
   author: {
-    id: string
-    name: string
-    email: string
-    image?: string
-  }
+    id: string;
+    name: string;
+    email: string;
+    image?: string;
+  };
+  likeCount: number;
+  hasLiked: boolean;
 }
+
 
 export default function DashboardPage() {
   const { user, isLoading: authLoading } = useAuth()
@@ -237,22 +242,14 @@ export default function DashboardPage() {
                           <p className="text-gray-800 whitespace-pre-wrap leading-relaxed mb-4 text-base">
                             {post.content}
                           </p>
-                          <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-                            <div className="flex items-center space-x-6">
-                              <Button variant="ghost" size="sm" className="text-gray-600 hover:text-red-500 hover:bg-red-50">
-                                <Heart className="w-4 h-4 mr-2" />
-                                <span className="text-sm">Like</span>
-                              </Button>
-                              <Button variant="ghost" size="sm" className="text-gray-600 hover:text-blue-600 hover:bg-blue-50">
-                                <MessageSquare className="w-4 h-4 mr-2" />
-                                <span className="text-sm">Comment</span>
-                              </Button>
-                              <Button variant="ghost" size="sm" className="text-gray-600 hover:text-green-600 hover:bg-green-50">
-                                <Share className="w-4 h-4 mr-2" />
-                                <span className="text-sm">Share</span>
-                              </Button>
-                            </div>
-                          </div>
+                          <LikeCommentShareButtons
+  postId={post.id}
+  initialLiked={post.hasLiked}
+  initialLikeCount={post.likeCount || 0}
+/>
+
+
+
                         </div>
                       </div>
                     </CardContent>

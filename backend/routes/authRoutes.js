@@ -1,85 +1,40 @@
+import express from "express";
+import passport from "passport";
 
-import passport from 'passport';
-import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
+const router = express.Router();
 
-passport.use(new GoogleStrategy({
-  clientID: process.env.GOOGLE_CLIENT_ID,
-  clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: "/api/auth/google/callback"
-}, async (accessToken, refreshToken, profile, done) => {
-  try {
-
-    let user = await prisma.user.findUnique({
-      where: { email: profile.emails[0].value }
-    });
-
-    if (!user) {
-   
-      user = await prisma.user.create({
-        data: {
-          name: profile.displayName,
-          email: profile.emails[0].value,
-          image: profile.photos[0].value,
-          emailVerified: new Date(),
-        }
-      });
-    }
-
-    return done(null, user);
-  } catch (error) {
-    return done(error, null);
-  }
-}));
-
-// Serialize user
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
-
-passport.deserializeUser(async (id, done) => {
-  try {
-    const user = await prisma.user.findUnique({ where: { id } });
-    done(null, user);
-  } catch (error) {
-    done(error, null);
-  }
-});
-
-// Add these routes
-app.use(passport.initialize());
-app.use(passport.session());
-
-
-app.get('/api/auth/google', 
-  passport.authenticate('google', { scope: ['profile', 'email'] })
+router.get(
+  "/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
 );
 
-app.get('/api/auth/google/callback',
-  passport.authenticate('google', { failureRedirect: '/login' }),
+router.get(
+  "/google/callback",
+  passport.authenticate("google", { failureRedirect: "/login" }),
   (req, res) => {
-    res.redirect('http://localhost:3000/dashboard');
+    res.redirect("http://localhost:3000/dashboard");
   }
 );
 
-// Get current user
-app.get('/api/auth/me', (req, res) => {
+router.get("/me", (req, res) => {
   if (req.user) {
     res.json(req.user);
   } else {
-    res.status(401).json({ error: 'Not authenticated' });
+    res.status(401).json({ error: "Not authenticated" });
   }
 });
 
-// Logout
-app.post('/api/auth/logout', (req, res) => {
+router.post("/logout", (req, res) => {
   req.logout((err) => {
-    if (err) return res.status(500).json({ error: 'Logout failed' });
+    if (err) return res.status(500).json({ error: "Logout failed" });
 
     req.session.destroy((err) => {
-      if (err) return res.status(500).json({ error: 'Session destruction failed' });
+      if (err) return res.status(500).json({ error: "Session destruction failed" });
 
       res.clearCookie("connect.sid");
-      res.status(200).json({ message: 'Logged out successfully' });
+      res.status(200).json({ message: "Logged out successfully" });
     });
   });
 });
+
+export default router;

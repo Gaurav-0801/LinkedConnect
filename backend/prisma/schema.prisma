@@ -14,9 +14,47 @@ model User {
   emailVerified DateTime?
   image         String?
   createdAt     DateTime  @default(now())
-  posts         Post[]
-  accounts      Account[]
-  sessions      Session[]
+
+  posts         Post[]                     // One-to-many: User -> Post
+  likes         Like[]                     // One-to-many: User -> Like
+  comments      Comment[]                  // One-to-many: User -> Comment
+
+  accounts      Account[]                  // One-to-many: User -> Account
+  sessions      Session[]                  // One-to-many: User -> Session
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  content   String
+  authorId  String
+  createdAt DateTime @default(now())
+
+  author    User     @relation(fields: [authorId], references: [id])  // Many-to-one: Post -> User
+
+  likes     Like[]                                          // One-to-many: Post -> Like
+  comments  Comment[]                                       // One-to-many: Post -> Comment
+}
+
+model Like {
+  id        String   @id @default(uuid())
+  userId    String
+  postId    String
+
+  user      User     @relation(fields: [userId], references: [id])   // Many-to-one: Like -> User
+  post      Post     @relation(fields: [postId], references: [id])   // Many-to-one: Like -> Post
+
+  @@unique([userId, postId])  // Ensure a user can like a post only once
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  content   String
+  createdAt DateTime @default(now())
+  userId    String
+  postId    String
+
+  user      User     @relation(fields: [userId], references: [id])   // Many-to-one: Comment -> User
+  post      Post     @relation(fields: [postId], references: [id])   // Many-to-one: Comment -> Post
 }
 
 model Account {
@@ -45,15 +83,6 @@ model Session {
   expires      DateTime
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model Post {
-  id        String   @id @default(cuid())
-  content   String
-  authorId  String
-  createdAt DateTime @default(now())
-
-  author User @relation(fields: [authorId], references: [id])
 }
 
 model VerificationToken {

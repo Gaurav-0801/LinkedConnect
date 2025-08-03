@@ -1,16 +1,13 @@
-import type React from "react"
-import type { Metadata } from "next"
-import { Inter } from "next/font/google"
 import "./globals.css"
-import { AuthProvider } from "@/hooks/use-auth"
+import { Inter } from "next/font/google"
+import type { Metadata } from "next"
+import Providers from "./providers"
 
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
   title: "LinkedConnect - Professional Networking Platform",
   description: "Connect with professionals, share insights, and grow your career",
-  keywords: "professional networking, career development, business connections, LinkedIn alternative",
-    generator: 'Gaurav'
 }
 
 export default function RootLayout({
@@ -21,7 +18,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <AuthProvider>{children}</AuthProvider>
+        <Providers>{children}</Providers> {/* wraps with Auth + Session context */}
       </body>
     </html>
   )
